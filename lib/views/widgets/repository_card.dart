@@ -17,7 +17,8 @@ class RepositoryCard extends StatelessWidget {
         horizontal: screenWidth * 0.05, // 5% of screen width
       ),
       child: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.03), // Padding inside the card
+        padding: EdgeInsets.all(
+            screenWidth * 0.03), // Adjust padding inside the card
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,12 +27,14 @@ class RepositoryCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(repository.avatarUrl),
-                  radius: screenWidth * 0.07, // Adjust avatar size
+                  radius: screenWidth *
+                      0.06, // Adjust avatar size (slightly smaller)
                 ),
                 SizedBox(
                     width:
                         screenWidth * 0.03), // Spacing between image and text
                 Expanded(
+                  // Ensure name and owner use all available space
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -39,38 +42,44 @@ class RepositoryCard extends StatelessWidget {
                         repository.name,
                         style: TextStyle(
                           fontSize: screenWidth *
-                              0.05, // Adjust font size for the repository name
+                              0.045, // Font size for repository name
                           fontWeight: FontWeight.bold,
                         ),
+                        overflow: TextOverflow
+                            .ellipsis, // Adds ellipsis if text overflows
                       ),
                       Text(
                         repository.owner,
                         style: TextStyle(
-                          fontSize: screenWidth *
-                              0.04, // Adjust font size for the owner
+                          fontSize: screenWidth * 0.035, // Font size for owner
                           color: Colors.grey[600],
                         ),
+                        overflow: TextOverflow
+                            .ellipsis, // Adds ellipsis if text overflows
                       ),
                     ],
                   ),
                 ),
-                Text(
-                  '${repository.stars} ⭐',
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.045, // Adjust font size for stars
-                    fontWeight: FontWeight.w500,
+                // No Spacer needed here, directly aligning the stars
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '${repository.stars} ⭐',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04, // Font size for stars
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
             ),
             SizedBox(
-                height: screenHeight *
-                    0.01), // Spacing between the row and the description
+                height:
+                    screenHeight * 0.01), // Spacing between row and description
             Text(
               repository.description,
               style: TextStyle(
-                fontSize:
-                    screenWidth * 0.04, // Adjust font size for the description
+                fontSize: screenWidth * 0.035, // Font size for description
                 color: Colors.grey[600],
               ),
             ),
