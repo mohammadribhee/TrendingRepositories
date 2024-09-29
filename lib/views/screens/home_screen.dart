@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/repository_viewmodel.dart';
 import '../widgets/repository_card.dart';
-import '../../utils/date_range_helper.dart'; // Import the helper class
+import '../../utils/date_range_helper.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -18,11 +20,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchDataForSelectedTimeRange();
   }
 
-  // Fetch data based on the selected time range using the helper
   void _fetchDataForSelectedTimeRange() {
     String dateRange = DateRangeHelper.getDateRange(_selectedTimeRange);
-    Provider.of<RepositoryViewModel>(context, listen: false)
-        .fetchRepositories(dateRange);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<RepositoryViewModel>(context, listen: false)
+          .fetchRepositories(dateRange);
+    });
   }
 
   @override
@@ -31,11 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trending Repositories'),
+        title: const Text('Trending Repositories'),
         actions: [
           DropdownButton<String>(
             value: _selectedTimeRange,
-            items: [
+            items: const [
               DropdownMenuItem(value: 'Last Day', child: Text('Last Day')),
               DropdownMenuItem(value: 'Last Week', child: Text('Last Week')),
               DropdownMenuItem(value: 'Last Month', child: Text('Last Month')),
@@ -49,8 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: viewModel.repositories.isEmpty
-          ? Center(child: CircularProgressIndicator()) // Show loading indicator
+      body: viewModel.isLoading // Check if loading
+          ? const Center(
+              child: CircularProgressIndicator()) // Show loading indicator
           : ListView.builder(
               itemCount: viewModel.repositories.length,
               itemBuilder: (context, index) {
