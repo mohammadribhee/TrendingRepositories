@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,16 +16,17 @@ class GitHubApiService {
     // Build the full URI
     final uri = Uri.parse(baseUrl).replace(queryParameters: queryParameters);
 
+    final token = dotenv.env['GITHUB_TOKEN'];
     // Optional: Include your personal access token in headers if you need more than 60 requests/hour
-    // final headers = {
-    //   'Authorization': 'token YOUR_PERSONAL_ACCESS_TOKEN',
-    //   'Accept': 'application/vnd.github.v3+json',
-    // };
-
-    // Default headers without token
     final headers = {
+      'Authorization': 'token $token',
       'Accept': 'application/vnd.github.v3+json',
     };
+
+    // Default headers without token
+    // final headers = {
+    //   'Accept': 'application/vnd.github.v3+json',
+    // };
 
     // Make the GET request
     final response = await http.get(uri, headers: headers);
