@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/repository_viewmodel.dart';
 import '../widgets/repository_card.dart';
+import '../../utils/date_range_helper.dart'; // Import the helper class
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,22 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchDataForSelectedTimeRange();
   }
 
-  // Helper function to fetch data based on the selected time range
+  // Fetch data based on the selected time range using the helper
   void _fetchDataForSelectedTimeRange() {
-    String dateRange;
-    DateTime now = DateTime.now();
-
-    if (_selectedTimeRange == 'Last Day') {
-      dateRange =
-          now.subtract(Duration(days: 1)).toIso8601String().split('T')[0];
-    } else if (_selectedTimeRange == 'Last Week') {
-      dateRange =
-          now.subtract(Duration(days: 7)).toIso8601String().split('T')[0];
-    } else {
-      dateRange =
-          now.subtract(Duration(days: 30)).toIso8601String().split('T')[0];
-    }
-
+    String dateRange = DateRangeHelper.getDateRange(_selectedTimeRange);
     Provider.of<RepositoryViewModel>(context, listen: false)
         .fetchRepositories(dateRange);
   }
