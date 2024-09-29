@@ -46,22 +46,23 @@ class _HomeScreenState extends State<HomeScreen> {
             onChanged: (value) {
               setState(() {
                 _selectedTimeRange = value!;
-                _fetchDataForSelectedTimeRange(); // Fetch data when time range changes
+                _fetchDataForSelectedTimeRange();
               });
             },
           ),
         ],
       ),
-      body: viewModel.isLoading // Check if loading
-          ? const Center(
-              child: CircularProgressIndicator()) // Show loading indicator
-          : ListView.builder(
-              itemCount: viewModel.repositories.length,
-              itemBuilder: (context, index) {
-                return RepositoryCard(
-                    repository: viewModel.repositories[index]);
-              },
-            ),
+      body: SafeArea(
+        child: viewModel.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                itemCount: viewModel.repositories.length,
+                itemBuilder: (context, index) {
+                  return RepositoryCard(
+                      repository: viewModel.repositories[index]);
+                },
+              ),
+      ),
     );
   }
 }
