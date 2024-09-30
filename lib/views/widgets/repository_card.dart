@@ -1,5 +1,6 @@
 // repository_card.dart
 import 'package:flutter/material.dart';
+import 'package:trending_repositories/views/screens/detail_screen.dart';
 import 'package:trending_repositories/views/widgets/repository_detail_screen.dart';
 import '../../data/models/repository_model.dart';
 
@@ -19,9 +20,7 @@ class RepositoryCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                RepositoryDetailScreen(repository: repository),
-          ),
+              builder: (context) => DetailScreen(repository: repository)),
         );
       },
       child: Card(
