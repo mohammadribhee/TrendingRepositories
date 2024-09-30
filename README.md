@@ -43,9 +43,10 @@ Navigation between screens is handled using Flutter's Navigator class with named
   1- flutter pub get.
   2- sudo gem install cocoapods.
   3- flutter clean.
-  4- on your project ---> cd ios.
-  5- pod install.
-  6- now you can run on your Xcode.
+  4- flutter pub get
+  5- on your project ---> cd ios.
+  6- pod install.
+  7- now you can run on your Xcode.
 
 - ## Incomplete Features
 
