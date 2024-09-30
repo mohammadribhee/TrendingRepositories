@@ -1,13 +1,49 @@
 // repository_card.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:trending_repositories/data/services/favorites_service.dart';
 import 'package:trending_repositories/views/screens/detail_screen.dart';
-import 'package:trending_repositories/views/widgets/repository_detail_screen.dart';
 import '../../data/models/repository_model.dart';
 
-class RepositoryCard extends StatelessWidget {
+class RepositoryCard extends StatefulWidget {
   final Repository repository;
 
   const RepositoryCard({super.key, required this.repository});
+
+  @override
+  _RepositoryCardState createState() => _RepositoryCardState();
+}
+
+class _RepositoryCardState extends State<RepositoryCard> {
+  final FavoritesService _favoritesService = FavoritesService();
+  bool isFavorited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfFavorited();
+  }
+
+  Future<void> _checkIfFavorited() async {
+    final favorites = await _favoritesService.getFavorites();
+    setState(() {
+      isFavorited = favorites.contains(widget.repository.toJson());
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    if (isFavorited) {
+      await _favoritesService
+          .removeFavorite(json.encode(widget.repository.toJson()));
+    } else {
+      await _favoritesService
+          .addFavorite(json.encode(widget.repository.toJson()));
+    }
+    setState(() {
+      isFavorited = !isFavorited;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +56,8 @@ class RepositoryCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DetailScreen(repository: repository)),
+              builder: (context) =>
+                  DetailScreen(repository: widget.repository)),
         );
       },
       child: Card(
@@ -38,7 +75,7 @@ class RepositoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(repository.avatarUrl),
+                    backgroundImage: NetworkImage(widget.repository.avatarUrl),
                     radius: screenWidth *
                         0.06, // Adjust avatar size (slightly smaller)
                   ),
@@ -50,7 +87,7 @@ class RepositoryCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          repository.name,
+                          widget.repository.name,
                           style: TextStyle(
                             fontSize: screenWidth *
                                 0.045, // Font size for repository name
@@ -60,7 +97,7 @@ class RepositoryCard extends StatelessWidget {
                               .ellipsis, // Adds ellipsis if text overflows
                         ),
                         Text(
-                          repository.owner,
+                          widget.repository.owner,
                           style: TextStyle(
                             fontSize:
                                 screenWidth * 0.035, // Font size for owner
@@ -75,7 +112,7 @@ class RepositoryCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      '${repository.stars} ⭐',
+                      '${widget.repository.stars} ⭐',
                       style: TextStyle(
                         fontSize: screenWidth * 0.04, // Font size for stars
                         fontWeight: FontWeight.w500,
@@ -88,11 +125,18 @@ class RepositoryCard extends StatelessWidget {
                   height: screenHeight *
                       0.01), // Spacing between row and description
               Text(
-                repository.description,
+                widget.repository.description,
                 style: TextStyle(
                   fontSize: screenWidth * 0.035, // Font size for description
                   color: Colors.grey[600],
                 ),
+              ),
+              IconButton(
+                icon: Icon(
+                  isFavorited ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorited ? Colors.red : null,
+                ),
+                onPressed: _toggleFavorite,
               ),
             ],
           ),
