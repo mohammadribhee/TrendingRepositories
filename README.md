@@ -23,7 +23,6 @@ Navigation between screens is handled using Flutter's Navigator class with named
 - Display trending repositories filtered by timeframe (day, week, month).
 - Infinite scrolling for large datasets.
 - Repository details page with additional information.
-- Caching of avatar images to reduce network calls.
 - Favorite repositories stored locally for offline access.
 - User-friendly UI that works on both Android and iOS devices.
 
@@ -31,3 +30,27 @@ Navigation between screens is handled using Flutter's Navigator class with named
 - **Search Functionality:** While the app allows filtering by timeframes, implementing a search function across all repositories could provide a better user experience.
 - **Offline Support:** Although favorites can be accessed offline, adding more comprehensive offline support (e.g., caching the entire repository list) would improve the app's usability without an internet connection.
 - **Testing:** I would add unit and widget tests to ensure the stability and reliability of the app.
+
+- ## Basic settings
+- **.env:**
+  1-You need to create a .env file in the root directory of your project.
+  2-Inside the .env file, define a variable named GITHUB_TOKEN
+  GITHUB_TOKEN=your_token_value
+  3-Then, you need to generate a PAT (Personal Access Token) from your GitHub account
+  4-Assign the generated token as the value of GITHUB_TOKEN in the .env file
+
+- **on IOS**
+  1- flutter pub get
+  2- sudo gem install cocoapods
+  3- flutter clean
+  4- on your project ---> cd ios
+  5- pod install
+  6- now you can run on your Xcode
+
+- ## Incomplete Features
+
+  1-Incomplete Features: When selecting favorite repositories and then opening their details, some fields may not contain data. I didn't have enough time to resolve this issue.
+
+  2-Route Navigation: Navigation between pages should be organized into a single file named route. However, I didn't have enough time to do this.
+
+  3-Favorite Screen Widgets: The favorite screen files need to be divided into widgets, but I didn't have enough time to accomplish this.
