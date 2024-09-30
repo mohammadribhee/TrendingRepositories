@@ -12,12 +12,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
   String _selectedTimeRange = 'Last Day'; // Default to 'Last Day'
 
   @override
   void initState() {
     super.initState();
     _fetchDataForSelectedTimeRange();
+
+    // Add scroll listener to detect when user reaches the bottom
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _loadMoreRepositories();
+      }
+    });
   }
 
   void _fetchDataForSelectedTimeRange() {
@@ -26,6 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<RepositoryViewModel>(context, listen: false)
           .fetchRepositories(dateRange);
     });
+  }
+
+  void _loadMoreRepositories() {
+    String dateRange = DateRangeHelper.getDateRange(_selectedTimeRange);
+    Provider.of<RepositoryViewModel>(context, listen: false)
+        .loadMoreRepositories(dateRange); // Load more data when at the end
   }
 
   @override
@@ -55,14 +70,34 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: viewModel.repositories.length,
-                itemBuilder: (context, index) {
-                  return RepositoryCard(
-                      repository: viewModel.repositories[index]);
-                },
-              ),
+            : viewModel.repositories.isEmpty
+                ? const Center(
+                    child: Text(
+                        'No repositories found for the selected timeframe.'))
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: viewModel.repositories.length +
+                        (viewModel.isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == viewModel.repositories.length) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Center(
+                              child:
+                                  CircularProgressIndicator()), // Loader at the bottom
+                        );
+                      }
+                      return RepositoryCard(
+                          repository: viewModel.repositories[index]);
+                    },
+                  ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

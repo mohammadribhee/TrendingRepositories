@@ -5,37 +5,34 @@ import 'dart:convert';
 class GitHubApiService {
   static const String baseUrl = 'https://api.github.com/search/repositories';
 
-  Future<List<dynamic>> fetchTrendingRepositories(String dateRange) async {
-    // Correctly encode the query parameters
+  Future<List<dynamic>> fetchTrendingRepositories(
+      String dateRange, int page) async {
     final queryParameters = {
       'q': 'created:>$dateRange',
       'sort': 'stars',
       'order': 'desc',
+      'page': '$page', // Add page parameter for pagination
+      'per_page': '30', // You can set how many items to load per page
     };
 
-    // Build the full URI
     final uri = Uri.parse(baseUrl).replace(queryParameters: queryParameters);
-
     final token = dotenv.env['GITHUB_TOKEN'];
-    // Optional: Include your personal access token in headers if you need more than 60 requests/hour
     final headers = {
       'Authorization': 'token $token',
       'Accept': 'application/vnd.github.v3+json',
     };
 
-    // Default headers without token
-    // final headers = {
-    //   'Accept': 'application/vnd.github.v3+json',
-    // };
-
-    // Make the GET request
     final response = await http.get(uri, headers: headers);
 
     if (response.statusCode == 200) {
-      // Parse the JSON response and return the 'items' list
       return jsonDecode(response.body)['items'];
     } else {
       throw Exception('Failed to load repositories');
     }
   }
 }
+
+// Default headers without token
+    // final headers = {
+    //   'Accept': 'application/vnd.github.v3+json',
+    // };
