@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import '../data/models/repository_model.dart';
 import '../data/services/github_api_service.dart';
+import '../utils/date_range_helper.dart'; // Assuming you have this for date range
 
 class RepositoryViewModel extends ChangeNotifier {
   List<Repository> repositories = [];
   final GitHubApiService apiService = GitHubApiService();
   bool isLoading = false;
-  bool isLoadingMore = false; // New flag for loading more data
-  int currentPage = 1; // Track pagination
+  bool isLoadingMore = false;
+  int currentPage = 1;
+
+  // Add selectedTimeRange with default value
+  String _selectedTimeRange = 'Last Day';
+
+  // Getter for selectedTimeRange
+  String get selectedTimeRange => _selectedTimeRange;
+
+  // Setter to update the selectedTimeRange and fetch repositories
+  void setTimeRange(String newRange) {
+    _selectedTimeRange = newRange;
+    repositories.clear(); // Clear previous repositories
+    fetchRepositories(DateRangeHelper.getDateRange(_selectedTimeRange));
+    notifyListeners();
+  }
 
   Future<void> fetchRepositories(String dateRange) async {
     isLoading = true;
