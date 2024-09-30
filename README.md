@@ -40,13 +40,13 @@ Navigation between screens is handled using Flutter's Navigator class with named
   4-Assign the generated token as the value of GITHUB_TOKEN in the .env file
 
 - **on IOS**
-  1- flutter pub get.
-  2- sudo gem install cocoapods.
-  3- flutter clean.
-  4- flutter pub get
-  5- on your project ---> cd ios.
-  6- pod install.
-  7- now you can run on your Xcode.
+  1. Run `flutter pub get`.
+  2. Install CocoaPods: `sudo gem install cocoapods`.
+  3. Clean the project: `flutter clean`.
+  4. Run `flutter pub get` again.
+  5. Navigate to your iOS project folder: `cd ios`.
+  6. Install the necessary pods: `pod install`.
+  7. Now you can run the project on Xcode.
 
 - ## Incomplete Features
 
