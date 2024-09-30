@@ -10,6 +10,11 @@ class RepositoryViewModel extends ChangeNotifier {
   bool isLoadingMore = false;
   int currentPage = 1;
 
+  RepositoryViewModel() {
+    // Fetch data for the initial time range when ViewModel is created
+    setTimeRange(_selectedTimeRange);
+  }
+
   // Add selectedTimeRange with default value
   String _selectedTimeRange = 'Last Day';
 
