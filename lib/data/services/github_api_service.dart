@@ -12,10 +12,16 @@ class GitHubApiService {
       'sort': 'stars',
       'order': 'desc',
       'page': '$page', // Add page parameter for pagination
-      'per_page': '30', // You can set how many items to load per page
+      'per_page': '100', // You can set how many items to load per page
     };
 
     final uri = Uri.parse(baseUrl).replace(queryParameters: queryParameters);
+
+// Default headers without token
+    // final headers = {
+    //   'Accept': 'application/vnd.github.v3+json',
+    // };
+
     final token = dotenv.env['GITHUB_TOKEN'];
     final headers = {
       'Authorization': 'token $token',
@@ -31,8 +37,3 @@ class GitHubApiService {
     }
   }
 }
-
-// Default headers without token
-    // final headers = {
-    //   'Accept': 'application/vnd.github.v3+json',
-    // };
